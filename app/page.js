@@ -26,7 +26,6 @@ export default function Home() {
   const [selectedCost, setSelectedCost] = useState(null);
   const [selectedDays, setSelectedDays] = useState(null);
   const [hasAccommodation, setHasAccommodation] = useState(null);
-  const [travelerType, setTravelerType] = useState(null);
   const [itinerary, setItinerary] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -40,11 +39,11 @@ export default function Home() {
   }, []);
 
   const handleSubmit = async () => {
-    if (selectedCost && selectedDays && hasAccommodation !== null && travelerType) {
+    if (selectedCost && selectedDays && hasAccommodation !== null) {
       setIsLoading(true);
       setError(null);
       
-      const userPrompt = `Create a ${selectedDays}-day itinerary for a ${travelerType} visiting Lisbon with a ${selectedCost} budget. ${hasAccommodation ? "They have accommodation arranged." : "They need accommodation recommendations."} Provide specific recommendations for activities, restaurants, and attractions.`;
+      const userPrompt = `Create a ${selectedDays}-day itinerary for visiting Lisbon with a ${selectedCost} budget. ${hasAccommodation ? "They have accommodation arranged." : "They need accommodation recommendations."} Provide specific recommendations for activities, restaurants, and attractions.`;
 
       const apiBody = {
         messages: [
@@ -139,27 +138,11 @@ export default function Home() {
                 ))}
               </div>
             </div>
-
-            <div>
-              <h3 className="font-semibold mb-2 dark:text-white">What kind of traveler are you?</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {['Explorer', 'Relaxer', 'Eater', 'Anthropologist'].map((type) => (
-                  <Button
-                    key={type}
-                    onClick={() => setTravelerType(type)}
-                    selected={travelerType === type}
-                    className="w-full"
-                  >
-                    {type}
-                  </Button>
-                ))}
-              </div>
-            </div>
             
             <div className="mt-8">
               <button 
                 onClick={handleSubmit} 
-                disabled={!selectedCost || !selectedDays || hasAccommodation === null || !travelerType || isLoading}
+                disabled={!selectedCost || !selectedDays || hasAccommodation === null || isLoading}
                 className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold text-lg shadow-md hover:bg-blue-700 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-500 dark:hover:bg-blue-600"
               >
                 {isLoading ? 'Generating Itinerary...' : 'Get Recommendations'}
