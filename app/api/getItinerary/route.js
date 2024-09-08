@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server';
 
+export const runtime = 'edge'; // Add this line to specify Edge Runtime
+
+export async function GET() {
+  return NextResponse.json({ message: "GET request received" });
+}
+
 export async function POST(req) {
   const body = await req.json();
 
+  // Ensure the API token is available
   const apiToken = process.env.CLOUDFLARE_API_TOKEN;
   if (!apiToken) {
     console.error('CLOUDFLARE_API_TOKEN is not set');
