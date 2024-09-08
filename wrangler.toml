@@ -1,14 +1,6 @@
 name = "lisbon-ai-travel"
 pages_build_output_dir = ".next"
 
-[site]
-bucket = ".next/static"
-
-[build]
-command = "npm run build"
-cwd = "."
-watch_dir = "src"
-
 [env.production]
 routes = [
   { pattern = "lisbon-ai.samrhea.com", custom_domain = true }
