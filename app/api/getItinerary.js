@@ -5,7 +5,7 @@ export async function POST(req) {
   const body = await req.json();
 
   const response = await fetch(
-    'https://api.cloudflare.com/client/v4/accounts/eca95c4515a39540cafc79d7b2561a25/ai/run/@cf/meta/llama-3-8b-instruct',
+    'https://gateway.ai.cloudflare.com/v1/eca95c4515a39540cafc79d7b2561a25/1/workers-ai/@cf/meta/llama-3.1-8b-instruct',
     {
       method: 'POST',
       headers: {
