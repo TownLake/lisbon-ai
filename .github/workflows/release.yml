@@ -40,5 +40,4 @@ jobs:
           CLOUDFLARE_DEPLOY_TOKEN: ${{ secrets.CLOUDFLARE_DEPLOY_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          wrangler pages publish .next/static --project-name=lisbon-ai-travel
-          wrangler pages deploy.next --project-name=lisbon-ai-travel
+          wrangler pages deploy .next --project-name=lisbon-ai-travel
