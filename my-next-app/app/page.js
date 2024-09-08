@@ -1,113 +1,197 @@
-import Image from "next/image";
+"use client";
+
+import React, { useState } from 'react';
+
+const Button = ({ children, onClick, disabled, className, selected }) => (
+  <button
+    onClick={onClick}
+    disabled={disabled}
+    className={`px-4 py-2 rounded ${
+      selected
+        ? 'bg-blue-600 text-white'
+        : 'bg-white text-blue-600 border border-blue-600'
+    } ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-50'} ${className}`}
+  >
+    {children}
+  </button>
+);
+
+const Card = ({ children, className }) => (
+  <div className={`bg-white shadow-lg rounded-lg p-6 ${className}`}>
+    {children}
+  </div>
+);
 
 export default function Home() {
+  const [selectedCost, setSelectedCost] = useState(null);
+  const [selectedDays, setSelectedDays] = useState(null);
+  const [hasAccommodation, setHasAccommodation] = useState(null);
+  const [travelerType, setTravelerType] = useState(null);
+  const [itinerary, setItinerary] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async () => {
+    if (selectedCost && selectedDays && hasAccommodation !== null && travelerType) {
+      setIsLoading(true);
+      setError(null);
+      
+      const userPrompt = `Create a ${selectedDays}-day itinerary for a ${travelerType} visiting Lisbon with a ${selectedCost} budget. ${hasAccommodation ? "They have accommodation arranged." : "They need accommodation recommendations."} Provide specific recommendations for activities, restaurants, and attractions.`;
+
+      const apiBody = {
+        messages: [
+          {
+            role: "system",
+            content: "You are a knowledgeable travel assistant specializing in Lisbon, Portugal. Provide detailed and personalized travel itineraries based on user preferences."
+          },
+          {
+            role: "user",
+            content: userPrompt
+          }
+        ]
+      };
+
+      try {
+        const response = await fetch('/api/getItinerary', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(apiBody),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch itinerary');
+        }
+
+        const data = await response.json();
+        setItinerary(data.result.response);
+      } catch (err) {
+        setError('An error occurred while fetching your itinerary. Please try again.');
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-orange-50 flex flex-col items-center justify-center p-4">
+      <div className="absolute inset-0 bg-grid-slate-200 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10"></div>
+      <Card className="w-full max-w-md mb-6">
+        <h1 className="text-2xl font-bold text-center mb-2">Welcome to Lisbon Travel</h1>
+        <p className="text-center mb-6">Get personalized travel recommendations for your Lisbon adventure!</p>
+        
+        {!itinerary ? (
+          <div className="space-y-6">
+            <div>
+              <h3 className="font-semibold mb-2">Select your budget:</h3>
+              <div className="flex space-x-2">
+                {['$', '$$', '$$$'].map((cost) => (
+                  <Button
+                    key={cost}
+                    onClick={() => setSelectedCost(cost)}
+                    selected={selectedCost === cost}
+                    className="w-16"
+                  >
+                    {cost}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-2">How many days?</h3>
+              <div className="flex space-x-2">
+                {[1, 2, 3, 4].map((days) => (
+                  <Button
+                    key={days}
+                    onClick={() => setSelectedDays(days)}
+                    selected={selectedDays === days}
+                    className="w-16"
+                  >
+                    {days}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-2">Do you already have a place to stay?</h3>
+              <div className="flex space-x-2">
+                {['Yes', 'No'].map((option) => (
+                  <Button
+                    key={option}
+                    onClick={() => setHasAccommodation(option === 'Yes')}
+                    selected={hasAccommodation === (option === 'Yes')}
+                    className="flex-1"
+                  >
+                    {option}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-2">What kind of traveler are you?</h3>
+              <div className="grid grid-cols-2 gap-2">
+                {['Explorer', 'Relaxer', 'Eater', 'Anthropologist'].map((type) => (
+                  <Button
+                    key={type}
+                    onClick={() => setTravelerType(type)}
+                    selected={travelerType === type}
+                    className="w-full"
+                  >
+                    {type}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            
+            <div className="mt-8">
+              <button 
+                onClick={handleSubmit} 
+                disabled={!selectedCost || !selectedDays || hasAccommodation === null || !travelerType || isLoading}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold text-lg shadow-md hover:bg-blue-700 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Generating Itinerary...' : 'Get Recommendations'}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Your Personalized Lisbon Itinerary</h2>
+            <div className="bg-gray-100 p-4 rounded-lg">
+              <pre className="whitespace-pre-wrap">{itinerary}</pre>
+            </div>
+            <button 
+              onClick={() => setItinerary(null)} 
+              className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg font-semibold shadow-md hover:bg-blue-700 transition-colors duration-300"
+            >
+              Start Over
+            </button>
+          </div>
+        )}
+        
+        {error && (
+          <div className="mt-4 text-red-600 text-center">
+            {error}
+          </div>
+        )}
+      </Card>
+      <footer className="bg-white bg-opacity-20 backdrop-blur-md rounded-lg px-4 py-2 text-center text-blue-900 shadow-md">
+        <p>
+          Looking for a static list? Visit{' '}
+          <a 
+            href="https://lisbon.samrhea.com" 
+            target="_blank" 
             rel="noopener noreferrer"
+            className="font-medium text-blue-600 hover:text-blue-800 underline transition-colors"
           >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
+            lisbon.samrhea.com
           </a>
-        </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+        </p>
+      </footer>
+    </div>
   );
 }
