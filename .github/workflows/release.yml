@@ -25,7 +25,7 @@ jobs:
         run: npm version
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build app
         run: npm run build
@@ -41,4 +41,4 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           wrangler pages publish .next/static --project-name=lisbon-ai-travel
-          wrangler pages deploy.next --project-name=lisbon-travel-app
+          wrangler pages deploy.next --project-name=lisbon-ai-travel
