@@ -30,6 +30,14 @@ export default function Home() {
   const [itinerary, setItinerary] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [systemMessage, setSystemMessage] = useState('');
+
+  useEffect(() => {
+    fetch('/system-message.txt')
+      .then(response => response.text())
+      .then(text => setSystemMessage(text))
+      .catch(err => console.error('Failed to load system message:', err));
+  }, []);
 
   const handleSubmit = async () => {
     if (selectedCost && selectedDays && hasAccommodation !== null && travelerType) {
@@ -42,7 +50,7 @@ export default function Home() {
         messages: [
           {
             role: "system",
-            content: "You are a knowledgeable travel assistant specializing in Lisbon, Portugal. Provide detailed and personalized travel itineraries based on user preferences."
+            content: systemMessage
           },
           {
             role: "user",
