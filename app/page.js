@@ -87,7 +87,7 @@ export default function Home() {
       <div className="absolute inset-0 bg-grid-slate-200 dark:bg-grid-slate-700 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:[mask-image:linear-gradient(0deg,black,rgba(0,0,0,0.6))] -z-10"></div>
       <Card className="w-full max-w-md mb-6">
         <h1 className="text-2xl font-bold text-center mb-2 dark:text-white">A SamBot Guide for Lisbon</h1>
-        <p className="text-center mb-6 dark:text-gray-300">your custom itinerary</p>
+        <p className="text-center mb-6 dark:text-gray-300">your custom itinerary for 🇵🇹</p>
         
         {!itinerary ? (
           <div className="space-y-6">
