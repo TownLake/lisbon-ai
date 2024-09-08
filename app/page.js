@@ -79,13 +79,13 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 flex flex-col items-center justify-center p-4">
       <div className="absolute inset-0 bg-grid-slate-200 dark:bg-grid-slate-700 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:[mask-image:linear-gradient(0deg,black,rgba(0,0,0,0.6))] -z-10"></div>
       <Card className="w-full max-w-md mb-6">
-        <h1 className="text-2xl font-bold text-center mb-2 dark:text-white">Welcome to Lisbon Travel</h1>
-        <p className="text-center mb-6 dark:text-gray-300">Get personalized travel recommendations for your Lisbon adventure!</p>
+        <h1 className="text-2xl font-bold text-center mb-2 dark:text-white">SamBot's Guide to Lisbon</h1>
+        <p className="text-center mb-6 dark:text-gray-300">A custom itinerary for your visit - Powered by Cloudflare</p>
         
         {!itinerary ? (
           <div className="space-y-6">
             <div>
-              <h3 className="font-semibold mb-2 dark:text-white">Select your budget:</h3>
+              <h3 className="font-semibold mb-2 dark:text-white">What is your budget?</h3>
               <div className="flex space-x-2">
                 {['$', '$$', '$$$'].map((cost) => (
                   <Button
@@ -101,7 +101,7 @@ export default function Home() {
             </div>
             
             <div>
-              <h3 className="font-semibold mb-2 dark:text-white">How many days?</h3>
+              <h3 className="font-semibold mb-2 dark:text-white">How long do you have?</h3>
               <div className="flex space-x-2">
                 {[1, 2, 3, 4].map((days) => (
                   <Button
@@ -160,7 +160,7 @@ export default function Home() {
           </div>
         ) : (
           <div>
-            <h2 className="text-xl font-semibold mb-4 dark:text-white">Your Personalized Lisbon Itinerary</h2>
+            <h2 className="text-xl font-semibold mb-4 dark:text-white">Your Lisbon Itinerary</h2>
             <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
               <pre className="whitespace-pre-wrap dark:text-gray-200">{itinerary}</pre>
             </div>
