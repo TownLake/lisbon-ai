@@ -108,7 +108,7 @@ export default function Home() {
             </div>
             
             <div>
-              <h3 className="font-semibold mb-2 dark:text-white">How long do you have?</h3>
+              <h3 className="font-semibold mb-2 dark:text-white">How many days do you have?</h3>
               <div className="flex space-x-2">
                 {[1, 2, 3].map((days) => (
                   <Button
