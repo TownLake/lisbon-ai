@@ -43,7 +43,7 @@ export default function Home() {
       setIsLoading(true);
       setError(null);
       
-      const userPrompt = `Create a ${selectedDays}-day itinerary for visiting Lisbon with a ${selectedCost} budget. ${hasAccommodation ? "They have accommodation arranged." : "They need accommodation recommendations."} Provide specific recommendations for activities, restaurants, and attractions.`;
+      const userPrompt = `Create a ${selectedDays}-day itinerary for a tourist visiting Lisbon with a ${selectedCost} budget. ${hasAccommodation ? "The visitor have accommodation arranged so do not suggest hotels." : "The visitor needs an accommodation recommendation."} Provide specific recommendations for activities, restaurants, and attractions.`;
 
       const apiBody = {
         messages: [
