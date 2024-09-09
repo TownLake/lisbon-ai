@@ -183,6 +183,9 @@ export default function Home() {
           </a>
         </p>
       </footer>
+      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        Built on Cloudflare Workers & Cloudflare Workers AI
+      </p>
     </div>
   );
 }
