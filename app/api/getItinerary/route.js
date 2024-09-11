@@ -18,7 +18,7 @@ export async function POST(req) {
 
   try {
     const response = await fetch(
-      'https://gateway.ai.cloudflare.com/v1/eca95c4515a39540cafc79d7b2561a25/1/workers-ai/@cf/meta/llama-3.1-8b-instruct',
+      'https://gateway.ai.cloudflare.com/v1/eca95c4515a39540cafc79d7b2561a25/1/workers-ai/@cf/meta/llama-3.1-70b-instruct-preview',
       {
         method: 'POST',
         headers: {
