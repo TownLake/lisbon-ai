@@ -183,9 +183,14 @@ export default function Home() {
           </a>
         </p>
       </footer>
-      <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">
-        Built on Cloudflare Workers & Cloudflare Workers AI
-      </p>
+      <a 
+  href="https://github.com/TownLake/lisbon-ai"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="mt-6 text-xs text-gray-500 dark:text-gray-400 hover:underline"
+>
+  Built on Cloudflare Workers & Cloudflare Workers AI
+</a>
     </div>
   );
 }
